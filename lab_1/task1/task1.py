@@ -1,3 +1,6 @@
+from variables import ALPHABET, ORIGINAL_TEXT, KEY, ENCRYPT_TEXT
+
+
 def vigenere_encrypt(key, alphabet, text):
     """
     Функция для шифрования текста с шифром Виженера.
@@ -49,4 +52,29 @@ def save_to_file(filename, data):
         print(f"Ошибка при записи в файл {filename}: {e}")
 
 
+def main():
+    try:
+        with open(ORIGINAL_TEXT, 'r', encoding='utf-8') as file:
+            orig_text = file.read()
 
+        with open(KEY, 'r', encoding='utf-8') as file:
+            key = file.read()
+
+        encrypt_text = vigenere_encrypt(key, ALPHABET, orig_text)
+
+        if encrypt_text:
+            print("Зашифрованный текст: ")
+            print(encrypt_text)
+
+            save_to_file(ENCRYPT_TEXT, encrypt_text)
+
+            print("\nДанные сохранены в файл: encrypted_text.txt")
+        else:
+            print("\nШифрование не удалось, зашифрованный текст пуст.")
+    except FileNotFoundError as e:
+        print(f"Ошибка: Файл не найден. {e}")
+    except Exception as e:
+        print(f"Неизвестная ошибка: {e}")
+
+if __name__ == "main":
+    main()
