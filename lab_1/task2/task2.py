@@ -41,7 +41,7 @@ def calculate_char_frequency(text):
         for char in text:
             dictionary_freq[char] = dictionary_freq.get(char, 0) + 1
 
-        return {char: (count / text_len) * 100 for char, count in dictionary_freq.items()}
+        return {char: round(count / text_len, 5) for char, count in dictionary_freq.items()}
     except Exception as e:
         print(f"Ошибка при вычислении процента символов: {e}")
         return {}
