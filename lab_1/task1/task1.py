@@ -31,11 +31,8 @@ def vigenere_encrypt(key, alphabet, text):
             else:
                 encrypt_text += char
         return encrypt_text
-    except ValueError as e:
-        print(f"Ошибка: {e}")
-        return ""
     except Exception as e:
-        print(f"Неизвестная ошибка: {e}")
+        print(f"Ошибка: {e}")
         return ""
 
 
@@ -74,7 +71,7 @@ def main():
     except FileNotFoundError as e:
         print(f"Ошибка: Файл не найден. {e}")
     except Exception as e:
-        print(f"Неизвестная ошибка: {e}")
+        print(f"Ошибка: {e}")
 
 
 if __name__ == "__main__":
