@@ -39,7 +39,7 @@ def vigenere_encrypt(key, alphabet, text):
         return ""
 
 
-def save_to_file(filename, data):
+def write_to_file(filename, data):
     """
     Сохранение данных в файл
     :param filename: путь к файлу
@@ -66,7 +66,7 @@ def main():
             print("Зашифрованный текст: ")
             print(encrypt_text)
 
-            save_to_file(ENCRYPT_TEXT, encrypt_text)
+            write_to_file(ENCRYPT_TEXT, encrypt_text)
 
             print("\nДанные сохранены в файл: encrypted_text.txt")
         else:
