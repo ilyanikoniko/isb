@@ -27,6 +27,19 @@ def write_to_file(filename, data):
     except Exception as e:
         print(f"Ошибка при записи в файл {filename}: {e}")
 
+def read_file(filename):
+    """
+    Читает содержимое файла и возвращает его как строку.
+    :param filename: путь к файлу для чтения
+    :return: содержимое файла или пустая строка в случае ошибки
+    """
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            return file.read()
+    except Exception as e:
+        print(f"Ошибка при чтении файла {filename}: {e}")
+        return ""
+
 
 def calculate_char_frequency(text):
     """
@@ -73,8 +86,8 @@ def create_crypt_key(supportive_dict, replace_dict):
 
 def main():
     try:
-        with open(ENCRYPTED_TEXT, 'r', encoding='utf-8') as file:
-            text = file.read()
+
+        text = read_file(ENCRYPTED_TEXT)
 
         print("\nЗашифрованный текст:\n")
         print(text)
@@ -97,6 +110,8 @@ def main():
         write_to_file(DECRYPTED_TEXT, text)
 
         encryption_key = create_crypt_key(SUPPORTIVE_DICT, REPLACE_DICT)
+
+        print("Ключ:\n")
         if encryption_key:
             print(encryption_key)
 

@@ -49,13 +49,25 @@ def write_to_file(filename, data):
         print(f"Ошибка при записи в файл {filename}: {e}")
 
 
+def read_file(filename):
+    """
+    Читает содержимое файла и возвращает его как строку.
+    :param filename: путь к файлу для чтения
+    :return: содержимое файла или пустая строка в случае ошибки
+    """
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            return file.read()
+    except Exception as e:
+        print(f"Ошибка при чтении файла {filename}: {e}")
+        return ""
+
+
 def main():
     try:
-        with open(ORIGINAL_TEXT, 'r', encoding='utf-8') as file:
-            orig_text = file.read()
+        orig_text = read_file(ORIGINAL_TEXT)
 
-        with open(KEY, 'r', encoding='utf-8') as file:
-            key = file.read()
+        key = read_file(KEY)
 
         encrypt_text = vigenere_encrypt(key, ALPHABET, orig_text)
 
