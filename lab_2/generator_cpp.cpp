@@ -17,17 +17,15 @@ int main() {
         bits[i] = distrib(gen);
     }
 
-    // Вывод последовательности в консоль
     cout << "C++ GPSCH (128 bit):\n" << bits << endl;
 
-    // Сохранение последовательности в файл
     ofstream outfile("bin_sequence_cpp.txt");
     if (outfile.is_open()) {
         outfile << bits;
         outfile.close();
         cout << "Sequence saved to bin_sequence_cpp.txt." << endl;
     } else {
-        cerr << "Error: Couldn't open the file for writing!" << endl;
+        cout << "Error: Couldn't open the file for writing!" << endl;
         return 1;
     }
     return 0;

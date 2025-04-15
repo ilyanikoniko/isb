@@ -2,6 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
 
+
 public class RandomSequenceGenerator {
     public static void main(String[] args) {
         // Создание генератора
@@ -19,7 +20,6 @@ public class RandomSequenceGenerator {
             binaryString.append(binaryByte);
         }
 
-        // Запись последовательности в файл
         try (FileWriter writer = new FileWriter("bin_sequence_java.txt")) {
             writer.write(binaryString.toString());
             System.out.println("The sequence is saved in bin_sequence_java.txt");
