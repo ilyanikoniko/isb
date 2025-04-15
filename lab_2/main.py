@@ -53,3 +53,42 @@ def write_results(freq_cpp, freq_java,
         file.write("Test for the longest sequence of units in a block:\n")
         file.write(f"cpp: {long_cpp}\n")
         file.write(f"java: {long_java}\n")
+
+
+def main():
+    args = parse_arguments()
+
+    if not os.path.exists(args.cpp_file):
+        raise FileNotFoundError(f"Файл {args.cpp_file} не найден")
+    if not os.path.exists(args.java_file):
+        raise FileNotFoundError(f"Файл {args.java_file} не найден")
+
+    try:
+        seq_cpp = read_file(args.cpp_file)
+        seq_java = read_file(args.java_file)
+
+        if len(seq_cpp) != 128 or len(seq_java) != 128:
+            raise ValueError("Последовательности должны быть длиной 128 бит!")
+
+        freq_cpp = nist_tests.frequency_monobit_test(seq_cpp)
+        freq_java = nist_tests.frequency_monobit_test(seq_java)
+
+        runs_cpp = nist_tests.runs_test(seq_cpp)
+        runs_java = nist_tests.runs_test(seq_java)
+
+        long_cpp = nist_tests.longest_run_test(seq_cpp)
+        long_java = nist_tests.longest_run_test(seq_java)
+
+        write_results(freq_cpp, freq_java,
+                     runs_cpp, runs_java,
+                     long_cpp, long_java,
+                     args.results)
+
+        print(f"Результаты тестов сохранены в {args.results}")
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+
+
+if __name__ == "__main__":
+    main()
