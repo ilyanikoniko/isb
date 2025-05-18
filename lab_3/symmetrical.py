@@ -90,8 +90,8 @@ class Symmetrical:
             iv = encrypted_data[:8]
             encrypted_text = encrypted_data[8:]
 
-            if not (40 <= len(key) <= 128):
-                raise ValueError(f"Некорректный размер ключа: {len(key)} бит")
+            if not (5 <= len(key) <= 16):
+                raise ValueError(f"Некорректный размер ключа: {len(key)} байт")
 
             cipher = Cipher(algorithms.CAST5(key), modes.CBC(iv))
             decryptor = cipher.decryptor()

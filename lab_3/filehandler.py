@@ -1,9 +1,7 @@
 import json
-
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
-
 
 class FileHandler:
     """
@@ -19,12 +17,12 @@ class FileHandler:
         """
         try:
             with open(file_path, 'wb') as public_out:
-                public_out.write(public_key.public_bytes(encoding=serialization.Encoding.PEM,
-                                                     format=serialization.PublicFormat.SubjectPublicKeyInfo))
-        except FileNotFoundError:
-            print(f"Файл не найден")
+                public_out.write(public_key.public_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PublicFormat.SubjectPublicKeyInfo
+                ))
         except Exception as e:
-            print(f"При записи данных в файл произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка записи публичного ключа: {str(e)}")
 
     @staticmethod
     def write_private_key(file_path: str, private_key: RSAPrivateKey) -> None:
@@ -36,13 +34,13 @@ class FileHandler:
         """
         try:
             with open(file_path, 'wb') as private_out:
-                private_out.write(private_key.private_bytes(encoding=serialization.Encoding.PEM,
-                                                        format=serialization.PrivateFormat.TraditionalOpenSSL,
-                                                        encryption_algorithm=serialization.NoEncryption()))
-        except FileNotFoundError:
-            print(f"Файл не найден")
+                private_out.write(private_key.private_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PrivateFormat.TraditionalOpenSSL,
+                    encryption_algorithm=serialization.NoEncryption()
+                ))
         except Exception as e:
-            print(f"При записи данных в файл произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка записи приватного ключа: {str(e)}")
 
     @staticmethod
     def extraction_public_key(file_path: str) -> RSAPublicKey:
@@ -52,15 +50,11 @@ class FileHandler:
         :return: открытый ключ
         """
         try:
-
             with open(file_path, 'rb') as pem_in:
-
                 public_bytes = pem_in.read()
             return load_pem_public_key(public_bytes)
-        except FileNotFoundError:
-            print(f"Файл не найден")
         except Exception as e:
-            print(f"При чтении файла произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка чтения публичного ключа: {str(e)}")
 
     @staticmethod
     def extraction_private_key(file_path: str) -> RSAPrivateKey:
@@ -70,15 +64,11 @@ class FileHandler:
         :return: закрытый ключ
         """
         try:
-
             with open(file_path, 'rb') as pem_in:
-
                 private_bytes = pem_in.read()
-            return load_pem_private_key(private_bytes, password=None, )
-        except FileNotFoundError:
-            print(f"Файл не найден")
+            return load_pem_private_key(private_bytes, password=None)
         except Exception as e:
-            print(f"При чтении файла произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка чтения приватного ключа: {str(e)}")
 
     @staticmethod
     def write_bytes(file_path: str, data: bytes) -> None:
@@ -91,10 +81,8 @@ class FileHandler:
         try:
             with open(file_path, mode='wb') as file:
                 file.write(data)
-        except FileNotFoundError:
-            print(f"Файл не найден")
         except Exception as e:
-            print(f"При записи данных в файл произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка записи байтов: {str(e)}")
 
     @staticmethod
     def get_bytes(file_path: str) -> bytes:
@@ -107,10 +95,8 @@ class FileHandler:
             with open(file_path, 'rb') as file:
                 data = file.read()
             return data
-        except FileNotFoundError:
-            print(f"Файл не найден")
         except Exception as e:
-            print(f"При чтении файла произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка чтения байтов: {str(e)}")
 
     @staticmethod
     def write_txt(file_path: str, text: str) -> None:
@@ -123,10 +109,8 @@ class FileHandler:
         try:
             with open(file_path, 'w') as file:
                 file.write(text)
-        except FileNotFoundError:
-            print(f"Файл не найден")
         except Exception as e:
-            print(f"При записи данных в файл произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка записи текста: {str(e)}")
 
     @staticmethod
     def write_json(file_path: str, data: dict) -> None:
@@ -139,10 +123,8 @@ class FileHandler:
         try:
             with open(file_path, 'w', encoding='utf-8') as fp:
                 json.dump(data, fp, ensure_ascii=False, indent=1)
-        except FileNotFoundError:
-            print(f"Файл не найден")
         except Exception as e:
-            print(f"При записи данных в файл произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка записи JSON: {str(e)}")
 
     @staticmethod
     def get_json(file_name: str) -> dict[str, str]:
@@ -154,7 +136,5 @@ class FileHandler:
         try:
             with open(file_name, 'r', encoding='utf-8') as json_file:
                 return json.load(json_file)
-        except FileNotFoundError:
-            print(f"Файл не найден")
         except Exception as e:
-            print(f"При чтении файла произошла ошибка: {str(e)}.")
+            raise Exception(f"Ошибка чтения JSON: {str(e)}")
