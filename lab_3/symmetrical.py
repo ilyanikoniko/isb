@@ -21,7 +21,7 @@ class Symmetrical:
     @staticmethod
     def encrypt_text(key: bytes, text: str) -> bytes:
         """
-         Шифрование текстового файла симметричным алгоритмом
+        Шифрование текстового файла симметричным алгоритмом
         :param key: симметричный ключ
         :param text: текст для шифрования в виде строки
         :return: байтовая строка

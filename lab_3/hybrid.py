@@ -11,7 +11,7 @@ class Hybrid:
         """
         Генерация и сохранение ключей для гибридной криптосистемы
         :param key_length: длина ключа
-        :return: None
+        :return: кортеж из трёх ключей
         """
         private_key, public_key = Asymmetrical.generate_asymmetrical_keys()
         symmetric_key = Symmetrical.generate_key(key_length)

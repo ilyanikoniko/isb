@@ -45,7 +45,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "-m", "--mode",
         choices=["generate", "encrypt", "decrypt"],
-        required=True,
+        required=True,#аргумент обязателен
         help="Выберите режим работы:\ngenerate - создание ключей\nencrypt - зашифровать текст\ndecrypt - расшифровать текст"
     )
     parser.add_argument(
@@ -87,6 +87,7 @@ def main():
                 print("Шифрование данных...")
 
                 if not all([
+                    os.path.exists(settings["public_key"]),
                     os.path.exists(settings["private_key"]),
                     os.path.exists(settings["symmetric_key"])
                 ]):

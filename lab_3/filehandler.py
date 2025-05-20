@@ -73,9 +73,9 @@ class FileHandler:
     @staticmethod
     def serialize_symmetric_key(file_path: str, data: bytes) -> None:
         """
-        Сериализация симметричного ключа в файл
+        Сериализация бинарных данных в файл
         :param file_path: путь к файлу
-        :param data: ключ в виде бинарных данных
+        :param data: бинарные данные
         :return: None
         """
         try:
@@ -122,7 +122,7 @@ class FileHandler:
         """
         try:
             with open(file_path, 'w', encoding='utf-8') as fp:
-                json.dump(data, fp, ensure_ascii=False, indent=1)
+                json.dump(data, fp)
         except Exception as e:
             raise Exception(f"Ошибка записи JSON: {str(e)}")
 
