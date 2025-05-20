@@ -8,9 +8,9 @@ class FileHandler:
     Вспомогательный класс для работы с файлами
     """
     @staticmethod
-    def write_public_key(file_path: str, public_key: RSAPublicKey) -> None:
+    def serialize_public_key(file_path: str, public_key: RSAPublicKey) -> None:
         """
-        Сохранение открытого ключа в pem файл
+        Сериализация открытого ключа в pem файл
         :param file_path: путь для сохранения
         :param public_key: открытый ключ
         :return: None
@@ -25,9 +25,9 @@ class FileHandler:
             raise Exception(f"Ошибка записи публичного ключа: {str(e)}")
 
     @staticmethod
-    def write_private_key(file_path: str, private_key: RSAPrivateKey) -> None:
+    def serialize_private_key(file_path: str, private_key: RSAPrivateKey) -> None:
         """
-        Сохранение закрытого ключа в pem файл
+        Сериализация закрытого ключа в pem файл
         :param file_path: путь для сохранения
         :param private_key: закрытый ключ
         :return: None
@@ -43,9 +43,9 @@ class FileHandler:
             raise Exception(f"Ошибка записи приватного ключа: {str(e)}")
 
     @staticmethod
-    def extraction_public_key(file_path: str) -> RSAPublicKey:
+    def deserialization_public_key(file_path: str) -> RSAPublicKey:
         """
-        Извлечение открытого ключа из pem файла
+        Десериализация открытого ключа из pem файла
         :param file_path: путь к файлу
         :return: открытый ключ
         """
@@ -57,9 +57,9 @@ class FileHandler:
             raise Exception(f"Ошибка чтения публичного ключа: {str(e)}")
 
     @staticmethod
-    def extraction_private_key(file_path: str) -> RSAPrivateKey:
+    def deserialization_private_key(file_path: str) -> RSAPrivateKey:
         """
-        Извлечение закрытого ключа из pem файла
+        Десериализация закрытого ключа из pem файла
         :param file_path: путь к файлу
         :return: закрытый ключ
         """
@@ -71,11 +71,11 @@ class FileHandler:
             raise Exception(f"Ошибка чтения приватного ключа: {str(e)}")
 
     @staticmethod
-    def write_bytes(file_path: str, data: bytes) -> None:
+    def serialize_symmetric_key(file_path: str, data: bytes) -> None:
         """
-        Запись бинарных данных в файл
+        Сериализация симметричного ключа в файл
         :param file_path: путь к файлу
-        :param data: бинарные данные
+        :param data: ключ в виде бинарных данных
         :return: None
         """
         try:
@@ -85,11 +85,11 @@ class FileHandler:
             raise Exception(f"Ошибка записи байтов: {str(e)}")
 
     @staticmethod
-    def get_bytes(file_path: str) -> bytes:
+    def deserialize_symmetric_key(file_path: str) -> bytes:
         """
-        Чтение бинарных данных из файла
-        :param file_path: путь к файлу
-        :return: байты
+       Десериализация симметричного ключа
+        :param file_path: файл с ключом
+        :return: ключ в виде байтовой последовательности
         """
         try:
             with open(file_path, 'rb') as file:
@@ -138,3 +138,16 @@ class FileHandler:
                 return json.load(json_file)
         except Exception as e:
             raise Exception(f"Ошибка чтения JSON: {str(e)}")
+
+    @staticmethod
+    def read_txt(file_name: str) -> str:
+        """
+        Чтение текстовых данных из файла
+        :param file_name: путь к файлу
+        :return: текст из файла
+        """
+        try:
+            with open(file_name, 'r', encoding='utf-8') as file:
+                return file.read()
+        except Exception as e:
+            print(f"Ошибка чтения файла: {str(e)}.")

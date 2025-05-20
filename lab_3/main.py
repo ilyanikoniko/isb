@@ -3,6 +3,7 @@ import os
 import sys
 from pathlib import Path
 from hybrid import Hybrid
+from asymmetrical import Asymmetrical
 from filehandler import FileHandler
 from constants import SETTINGS_FILE, DEFAULT_SETTINGS
 
@@ -13,6 +14,8 @@ def create_default_settings_if_needed() -> None:
     :return: None
     """
     if not Path(SETTINGS_FILE).exists():
+        os.makedirs("keys", exist_ok=True)
+        os.makedirs("texts", exist_ok=True)
         FileHandler.write_json(SETTINGS_FILE, DEFAULT_SETTINGS)
         print(f" Создан файл настроек '{SETTINGS_FILE}' с дефолтными значениями.")
 
@@ -62,20 +65,22 @@ def main():
     :return: None
     """
     create_default_settings_if_needed()
-
     settings = load_settings()
-    hybrid = Hybrid()
     args = parse_arguments()
+
     try:
         match args.mode:
             case "generate":
                 print("Генерация ключей...")
-                hybrid.generate_and_save_keys(
-                    public_key_path=settings["public_key"],
-                    private_key_path=settings["private_key"],
-                    encrypted_sym_key_path=settings["symmetric_key"],
-                    key_length=args.key_length
-                )
+
+                private_key, public_key, symmetric_key = Hybrid.generate_keys(args.key_length)
+
+                encrypted_sym_key = Asymmetrical.encrypt_by_public_key(public_key, symmetric_key)
+
+                FileHandler.serialize_public_key(settings["public_key"], public_key)
+                FileHandler.serialize_private_key(settings["private_key"], private_key)
+                FileHandler.serialize_symmetric_key(settings["symmetric_key"], encrypted_sym_key)
+
                 print("Ключи успешно сгенерированы и сохранены")
 
             case "encrypt":
@@ -83,7 +88,6 @@ def main():
 
                 if not all([
                     os.path.exists(settings["private_key"]),
-                    os.path.exists(settings["public_key"]),
                     os.path.exists(settings["symmetric_key"])
                 ]):
                     raise FileNotFoundError(
@@ -95,12 +99,17 @@ def main():
                         f"Исходный файл {settings['initial_text']} не найден"
                     )
 
-                hybrid.encrypt_data(
-                    file_path=settings["initial_text"],
-                    private_key_path=settings["private_key"],
-                    encrypted_sym_key_path=settings["symmetric_key"],
-                    encrypted_path=settings["encrypted_text"]
+                private_key = FileHandler.deserialization_private_key(settings["private_key"])
+                encrypted_sym_key = FileHandler.deserialize_symmetric_key(settings["symmetric_key"])
+                plaintext = FileHandler.read_txt(settings["initial_text"])
+
+                encrypted_data = Hybrid.encrypt_data(
+                    private_key=private_key,
+                    encrypted_sym_key=encrypted_sym_key,
+                    plaintext=plaintext
                 )
+
+                FileHandler.serialize_symmetric_key(settings["encrypted_text"], encrypted_data)
                 print(f"Данные зашифрованы в {settings['encrypted_text']}")
 
             case "decrypt":
@@ -119,12 +128,17 @@ def main():
                         "Необходимые ключи не найдены. Проверьте наличие приватного ключа и зашифрованного симметричного ключа"
                     )
 
-                hybrid.decrypt_data(
-                    encrypted_file_path=settings["encrypted_text"],
-                    private_key_path=settings["private_key"],
-                    encrypted_sym_key_path=settings["symmetric_key"],
-                    decrypted_path=settings["decrypted_text"]
+                private_key = FileHandler.deserialization_private_key(settings["private_key"])
+                encrypted_sym_key = FileHandler.deserialize_symmetric_key(settings["symmetric_key"])
+                encrypted_data = FileHandler.deserialize_symmetric_key(settings["encrypted_text"])
+
+                decrypted_text = Hybrid.decrypt_data(
+                    private_key=private_key,
+                    encrypted_sym_key=encrypted_sym_key,
+                    encrypted_data=encrypted_data
                 )
+
+                FileHandler.write_txt(settings["decrypted_text"], decrypted_text)
                 print(f"Данные дешифрованы в {settings['decrypted_text']}")
 
             case _:
